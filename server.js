@@ -28,7 +28,6 @@ app.delete("/deleteProduct/:id", ProductRouter.deleteProduct);
 app.put("/editProduct/:id", ProductRouter.editProduct);
 const jwt = require('jsonwebtoken');
 
-const jwt = require('jsonwebtoken');
 
 // Add this route after your middleware setup and before starting the server
 app.get('/me', (req, res) => {
