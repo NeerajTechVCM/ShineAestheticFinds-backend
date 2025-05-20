@@ -9,7 +9,7 @@ const authMiddleware = require('./middleware/authentication');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
-
+  require('dotenv').config();
 app.use(express.json());
 app.use(cookieParser());
 app.use(
@@ -29,10 +29,11 @@ app.put("/editProduct/:id", ProductRouter.editProduct);
 
 
 
-mongoose.connect("mongodb+srv://np6848586:neeraj@cluster0.svfytdr.mongodb.net/")
-.then(()=>console.log("Mongodb Connected"))
-.catch((error)=>console.log(error))
+mongoose.connect(process.env.MONGODB_URL)
+  .then(() => console.log("MongoDB Connected"))
+  .catch((error) => console.error("MongoDB connection error:", error));
 
-app.listen(8080,()=>{
-    console.log("server listening to port 8080");
-})
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
+});
