@@ -1,25 +1,15 @@
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 
-module.exports.authMiddleware = async (req, res, next) => {
-    const token = req.cookies.token;
-    if (!token)
-      return res.status(401).json({
-        success: false,
-        message: "Unauthorised user!",
-      });
-  
-    try {
-      const decoded = jwt.verify(token, "CLIENT_SECRET_KEY");
-      console.log("a:",decoded)
-      req.user = decoded;
-      next();
-    } catch (error) {
-      res.status(401).json({
-        success: false,
-        message: "Unauthorised user!",
-      });
-    }
-  };
-  
+module.exports.authMiddleware=async( (req, res) => {
+  const token = req.cookies.token;
+  if (!token) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
 
-  
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "CLIENT_SECRET_KEY");
+    res.json({ user: { id: decoded.id, email: decoded.email, name: decoded.name } });
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+});

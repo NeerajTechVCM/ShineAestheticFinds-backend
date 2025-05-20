@@ -26,7 +26,24 @@ app.get('/getAllProducts',ProductRouter.getAllProducts)
 app.post('/logout',AuthRouter.logoutUser)
 app.delete("/deleteProduct/:id", ProductRouter.deleteProduct);
 app.put("/editProduct/:id", ProductRouter.editProduct);
+const jwt = require('jsonwebtoken');
 
+const jwt = require('jsonwebtoken');
+
+// Add this route after your middleware setup and before starting the server
+app.get('/me', (req, res) => {
+  const token = req.cookies.token;
+  if (!token) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "CLIENT_SECRET_KEY");
+    res.json({ user: { id: decoded.id, email: decoded.email, name: decoded.name } });
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+});
 
 
 mongoose.connect(process.env.MONGODB_URL)
