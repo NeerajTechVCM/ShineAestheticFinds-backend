@@ -5,7 +5,6 @@ const app = express();
 const AuthRouter = require('./controller/user-controller');
 const ProductRouter = require('./controller/product-controller');
 
-const authMiddleware = require('./middleware/authentication');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
@@ -37,7 +36,7 @@ app.get('/me', (req, res) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || "CLIENT_SECRET_KEY");
+    const decoded = jwt.verify(token,"CLIENT_SECRET_KEY");
     res.json({ user: { id: decoded.id, email: decoded.email, name: decoded.name } });
   } catch (err) {
     return res.status(401).json({ message: "Invalid token" });
